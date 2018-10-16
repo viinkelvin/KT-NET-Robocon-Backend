@@ -19,8 +19,8 @@ windows
 <envname>\Scripts\activate
 ```
 ```
-linux & Mac
-<envname>/bin/activate
+linux & Mac OS
+source <envname>/bin/activate
 ```
 
 ```
