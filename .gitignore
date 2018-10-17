@@ -1,1 +1,5 @@
 robotor
+# pycache
+src/__pycache__
+src/controllers/__pycache__
+src/routes/__pycache__

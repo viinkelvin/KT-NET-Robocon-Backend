@@ -4,11 +4,9 @@ user = Blueprint('user', __name__)
 url='/user'
 
 @user.route(url,methods=['POST'])
-def userinformation():
-	return UserController.userinformation()
+def UserInformation():
+	return UserController.UserInformation()
 
-@user.route(url + '/a',methods=['POST'])
-def usera():
-	return UserController.usera();
+
 
 
