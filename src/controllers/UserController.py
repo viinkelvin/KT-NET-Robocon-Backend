@@ -2,15 +2,20 @@ import pymysql
 import db_config as dbconfig
 from flask import jsonify
 from flask import request
-def UserInformation():
+import translate as translate
+import resulthelper as resulthelper
+def getUserLatestResult(user_code):
 	try:
-		content = request.get_json()
-		userID = content['user_id']
+		lang = request.headers['lang']
 		conn=pymysql.connect(host=dbconfig.host,user=dbconfig.user,password=dbconfig.password,db=dbconfig.db)
 		cursor = conn.cursor(pymysql.cursors.DictCursor)
-		cursor.execute("SELECT * FROM user WHERE user_id=%s", userID)
-
+		cursor.execute("""SELECT users.*,results.* FROM users 
+			LEFT JOIN results on users.id=results.user_id
+			WHERE users.user_code=%s""", user_code)
 		row = cursor.fetchone()
+		labelTransDict=getLabelTranslate(lang)
+		finaljson= combineDataAndlabel(row,labelTransDict)
+
 		resp = jsonify(row)
 		resp.status_code = 200
 		return resp
@@ -20,4 +25,24 @@ def UserInformation():
 		cursor.close()
 		conn.close()
 
+def getLabelTranslate(destlang):
+	labeldict=resulthelper.labelList
+	labelValueList=[]
+	for k in labeldict.values():
+		labelValueList.append(k)
+	i=0
+	# temporary stop
+	# labelValuetrans=translate.translate(labelValueList,'ja','destlang')
+	# for key in labeldict:
+	# 	labeldict[key]=labelValuetrans[i]
+	# 	i=i+1
+	return labeldict
 
+def combineDataAndlabel(data, label):
+	# looping the data
+	for eachlabel in label:
+		if eachlabel in data:
+			data[eachlabel]={"text":label[eachlabel],"value":data[eachlabel]}
+		else:
+			data.update({eachlabel : label[eachlabel]})
+	return data

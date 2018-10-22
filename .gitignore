@@ -1,5 +1,5 @@
 robotor
+src/db_config.py
 # pycache
-src/__pycache__
-src/controllers/__pycache__
-src/routes/__pycache__
+__pycache__
+
