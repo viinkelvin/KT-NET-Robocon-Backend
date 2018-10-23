@@ -7,6 +7,7 @@ import resulthelper as resulthelper
 def getUserLatestResult(user_code):
 	try:
 		lang = request.headers['lang']
+		print(lang)
 		conn=pymysql.connect(host=dbconfig.host,user=dbconfig.user,password=dbconfig.password,db=dbconfig.db)
 		cursor = conn.cursor(pymysql.cursors.DictCursor)
 		cursor.execute("""SELECT users.*,results.* FROM users 
@@ -31,15 +32,13 @@ def getLabelTranslate(destlang):
 	for k in labeldict.values():
 		labelValueList.append(k)
 	i=0
-	# temporary stop
-	# labelValuetrans=translate.translate(labelValueList,'ja','destlang')
-	# for key in labeldict:
-	# 	labeldict[key]=labelValuetrans[i]
-	# 	i=i+1
+	labelValuetrans=translate.translate(labelValueList,'ja',destlang)
+	for key in labeldict:
+		labeldict[key]=labelValuetrans[i]
+		i=i+1
 	return labeldict
 
 def combineDataAndlabel(data, label):
-	# looping the data
 	for eachlabel in label:
 		if eachlabel in data:
 			data[eachlabel]={"text":label[eachlabel],"value":data[eachlabel]}
